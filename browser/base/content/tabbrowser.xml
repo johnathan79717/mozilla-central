@@ -1756,6 +1756,8 @@
             b.setAttribute("tooltip", this.getAttribute("contenttooltip"));
 
             if (userContextId) {
+              //TODO call b.setUserContextId will throw.
+              //TypeError: b.setUserContextId is not a function
               b.setAttribute("usercontextid", userContextId);
             }
 
@@ -6403,7 +6405,7 @@
         <body>
         <![CDATA[
           if (aUserContextId) {
-            this.linkedBrowser.setAttribute("usercontextid", aUserContextId);
+            this.linkedBrowser.setUserContextId(aUserContextId);
             this.setAttribute("usercontextid", aUserContextId);
           } else {
             this.linkedBrowser.removeAttribute("usercontextid");

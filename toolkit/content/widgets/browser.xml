@@ -373,6 +373,17 @@
         </body>
       </method>
 
+      <method name="setUserContextId">
+        <parameter name="aUserContextId"/>
+        <body>
+        <![CDATA[
+          dump("XXX xul:browser setUserContextId called "+ aUserContextId+" this.contentDocument="+this.contentDocument+" this.documentURI="+this.documentURI+"\n");
+          //TODO check contentDocument is null
+          this.setAttribute("usercontextid", aUserContextId);
+        ]]>
+        </body>
+      </method>
+
       <field name="_finder">null</field>
 
       <property name="finder" readonly="true">
