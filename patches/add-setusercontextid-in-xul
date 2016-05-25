@@ -1,0 +1,56 @@
+Bottom: e6b680277f6c4bb0956c9a9fceaec4998ad3e087
+Top:    dbf56e642b67a5a34e153ce72fbdafe86216de27
+Author: Yoshi Huang <allstars.chh@mozilla.com>
+Date:   2016-05-06 11:03:10 +0800
+
+add setUserContextId in xul:browser
+
+https://bugzilla.mozilla.org/show_bug.cgi?id=1257455
+
+
+---
+
+diff --git a/browser/base/content/tabbrowser.xml b/browser/base/content/tabbrowser.xml
+index cefb522..cd44b6b 100644
+--- a/browser/base/content/tabbrowser.xml
++++ b/browser/base/content/tabbrowser.xml
+@@ -1756,6 +1756,8 @@
+             b.setAttribute("tooltip", this.getAttribute("contenttooltip"));
+ 
+             if (userContextId) {
++              //TODO call b.setUserContextId will throw.
++              //TypeError: b.setUserContextId is not a function
+               b.setAttribute("usercontextid", userContextId);
+             }
+ 
+@@ -6403,7 +6405,7 @@
+         <body>
+         <![CDATA[
+           if (aUserContextId) {
+-            this.linkedBrowser.setAttribute("usercontextid", aUserContextId);
++            this.linkedBrowser.setUserContextId(aUserContextId);
+             this.setAttribute("usercontextid", aUserContextId);
+           } else {
+             this.linkedBrowser.removeAttribute("usercontextid");
+diff --git a/toolkit/content/widgets/browser.xml b/toolkit/content/widgets/browser.xml
+index 1f213d6..e21dfeb 100644
+--- a/toolkit/content/widgets/browser.xml
++++ b/toolkit/content/widgets/browser.xml
+@@ -373,6 +373,17 @@
+         </body>
+       </method>
+ 
++      <method name="setUserContextId">
++        <parameter name="aUserContextId"/>
++        <body>
++        <![CDATA[
++          dump("XXX xul:browser setUserContextId called "+ aUserContextId+" this.contentDocument="+this.contentDocument+" this.documentURI="+this.documentURI+"\n");
++          //TODO check contentDocument is null
++          this.setAttribute("usercontextid", aUserContextId);
++        ]]>
++        </body>
++      </method>
++
+       <field name="_finder">null</field>
+ 
+       <property name="finder" readonly="true">
