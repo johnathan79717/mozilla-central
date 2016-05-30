@@ -11,6 +11,7 @@ interface nsIDocument;
 interface nsIDOMDocument;
 interface nsIProperties;
 interface nsIURI;
+interface nsIPrincipal;
 
 /**
  * imgICache interface
