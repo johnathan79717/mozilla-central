@@ -11,6 +11,7 @@
 #include "mozilla/Assertions.h"
 #include "mozilla/Attributes.h"
 #include "mozilla/FloatingPoint.h"
+#include "mozilla/Preferences.h"
 #include "mozilla/TypeTraits.h"
 #include "mozilla/Types.h"
 
@@ -108,8 +109,18 @@ public:
     }
     return BaseTimeDurationPlatformUtils::ToSecondsSigDigits(mValue);
   }
-  double ToMilliseconds() const { return ToSeconds() * 1000.0; }
-  double ToMicroseconds() const { return ToMilliseconds() * 1000.0; }
+  double ToMilliseconds() const {
+    //if (mozilla::Preferences::GetBool("javascript.options.reduce_time_precision")) {
+      //return floor(ToSeconds() * 1000000.0) * 1000.0;
+    //}
+    return ToSeconds() * 1000.0;
+  }
+  double ToMicroseconds() const {
+    //if (mozilla::Preferences::GetBool("javascript.options.reduce_time_precision")) {
+      //return floor(ToSeconds() * 1000000.0);
+    //}
+    return ToMilliseconds() * 1000.0;
+  }
 
   // Using a double here is safe enough; with 53 bits we can represent
   // durations up to over 280,000 years exactly.  If the units of

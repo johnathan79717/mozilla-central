@@ -10,6 +10,7 @@
 #include "nsCOMPtr.h"
 #include "nsCOMArray.h"
 #include "mozilla/TimeStamp.h"
+#include "mozilla/Preferences.h"
 
 class nsIURI;
 
@@ -92,6 +93,9 @@ public:
   inline DOMHighResTimeStamp TimeStampToDOMHighRes(mozilla::TimeStamp aStamp)
   {
     mozilla::TimeDuration duration = aStamp - mNavigationStartTimeStamp;
+    if (mozilla::Preferences::GetBool("javascript.options.reduce_time_precision", false)) {
+      return floor(duration.ToMilliseconds());
+    }
     return duration.ToMilliseconds();
   }
 

@@ -11,6 +11,7 @@
 #include "AnimationCommon.h"
 #include "mozilla/dom/Animation.h"
 #include "mozilla/MemoryReporting.h"
+#include "mozilla/Preferences.h"
 #include "mozilla/TimeStamp.h"
 
 class nsIGlobalObject;
@@ -47,7 +48,11 @@ struct AnimationEventInfo {
   {
     // XXX Looks like nobody initialize WidgetEvent::time
     mEvent.mAnimationName = aAnimationName;
-    mEvent.mElapsedTime = aElapsedTime.ToSeconds();
+    if (mozilla::Preferences::GetBool("javascript.options.reduce_time_precision")) {
+      mEvent.mElapsedTime = floor(aElapsedTime.ToMilliseconds()) / 1000.0;
+    } else {
+      mEvent.mElapsedTime = aElapsedTime.ToSeconds();
+    }
     mEvent.mPseudoElement =
       AnimationCollection<dom::CSSAnimation>::PseudoTypeAsString(aPseudoType);
   }

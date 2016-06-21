@@ -1079,7 +1079,11 @@ Event::DefaultPrevented(JSContext* aCx) const
 double
 Event::TimeStamp() const
 {
+  bool reduce_time_precision = Preferences::GetBool("javascript.options.reduce_time_precision");
   if (!sReturnHighResTimeStamp) {
+    if (reduce_time_precision) {
+      return static_cast<double>(mEvent->mTime / 100) * 100;
+    }
     return static_cast<double>(mEvent->mTime);
   }
 
@@ -1101,6 +1105,9 @@ Event::TimeStamp() const
       return 0.0;
     }
 
+    if (reduce_time_precision) {
+      return floor(perf->GetDOMTiming()->TimeStampToDOMHighRes(mEvent->mTimeStamp) / 100.0) * 100.0;
+    }
     return perf->GetDOMTiming()->TimeStampToDOMHighRes(mEvent->mTimeStamp);
   }
 

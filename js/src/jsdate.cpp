@@ -19,6 +19,7 @@
 
 #include "mozilla/ArrayUtils.h"
 #include "mozilla/FloatingPoint.h"
+#include "mozilla/Preferences.h"
 
 #include <ctype.h>
 #include <math.h>
@@ -51,6 +52,7 @@ using mozilla::ArrayLength;
 using mozilla::IsFinite;
 using mozilla::IsNaN;
 using mozilla::NumbersAreIdentical;
+using mozilla::Preferences;
 
 using JS::AutoCheckCannotGC;
 using JS::ClippedTime;
@@ -1219,7 +1221,11 @@ date_parse(JSContext* cx, unsigned argc, Value* vp)
 static ClippedTime
 NowAsMillis()
 {
-    return TimeClip(static_cast<double>(PRMJ_Now()) / PRMJ_USEC_PER_MSEC);
+    double now = TimeClip(static_cast<double>(PRMJ_Now()) / PRMJ_USEC_PER_MSEC);
+    if (Preferences::GetBool("javascript.options.reduce_time_precision")) {
+      return TimeClip(floor(now/100.0)*100.0);
+    }
+    return now;
 }
 
 bool
